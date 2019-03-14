@@ -1,0 +1,22 @@
+{
+	"boot_image": "rnode-dev",
+	"data_disk_size": 100,
+	"data_disk_ssd": false,
+	"gcp_compute_net": "testnet-1",
+	"gcp_compute_subnet": "testnet-1",
+	"gcp_compute_tags": ["rnode"],
+	"gcp_compute_zone": "us-central1-a",
+	"gcp_dns_zone": "testnet-1",
+	"gcp_project": "developer-222401",
+	"hostname_suffix": ".nodes.testnet1.rchain-dev.tk.",
+	"hostname_ttl": 300,
+	"machine_type": "n1-standard-1",
+	"resources_name_prefix": "testnet1-node-",
+	"host_metadata": {
+		"heartbeat_url": "http://testnet1-control:5050/heartbeat"
+	},
+	"rnode_package_url": "https://build.rchain-dev.tk/branches/dev/rnode-0.8.4.gite180c80d.tgz",
+	"timeout_heartbeat": 10,
+	"timeout_start_rnode": 30,
+	"timeout_start_host": 30
+}

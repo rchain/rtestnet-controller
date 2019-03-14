@@ -1,0 +1,9 @@
+pyjq
+schema
+deepmerge
+pynacl
+pycryptodome
+eth-hash[pycryptodome]
+apache-libcloud
+quart
+hypercorn

@@ -1,0 +1,45 @@
+{
+    "boot_image": "rnode-dev",
+    "compute_timeout": 600,
+    "data_disk_size": 100,
+    "data_disk_ssd": false,
+    "gcp_compute_net": "testnet-1",
+    "gcp_compute_subnet": "testnet-1",
+    "gcp_compute_tags": [
+        "rnode"
+    ],
+    "gcp_compute_zone": "us-central1-a",
+    "gcp_dns_zone": "testnet-1",
+    "gcp_project": "developer-222401",
+    "host_metadata": {
+        "heartbeat_url": "http://testnet1-control:5050/heartbeat"
+    },
+    "hostname": "node0.nodes.testnet1.rchain-dev.tk.",
+    "hostname_suffix": ".nodes.testnet1.rchain-dev.tk.",
+    "hostname_ttl": 300,
+    "machine_type": "n1-standard-1",
+    "resources_name": "testnet1-node-node0",
+    "resources_name_prefix": "testnet1-node-",
+    "rnode_addr": "rnode://196c8b1ee07de77afc2b966c62ae55f039ace107@node0.nodes.testnet1.rchain-dev.tk.?protocol=40400&discovery=40404",
+    "rnode_conf": {
+        "casper": {
+            "validator-private-key": "c5d21b66a8598e4d0abcbe94c80c0fd718d102622ab1226ecfc09b452bbdbf6d"
+        },
+        "grpc": {
+            "port-external": 40401
+        },
+        "server": {
+            "port": 40400,
+            "port-kademlia": 40404
+        }
+    },
+    "rnode_id": "196c8b1ee07de77afc2b966c62ae55f039ace107",
+    "rnode_package_url": "https://build.rchain-dev.tk/branches/dev/rnode-0.8.4.gite180c80d.tgz",
+    "rnode_tls_key": "-----BEGIN PRIVATE KEY-----\nMIGHAgEAMBMGByqGSM49AgEGCCqGSM49AwEHBG0wawIBAQQg/aiGWax0emrGJ+Fa\n814sJHyjhx0DbdXg8BZVXfUtUrOhRANCAASk9n1IllB+7682f72nX9SpruVcQxV7\nb1rjOnZqXwi+BWyugqi9TthyKb6IuMqqcVhE3f4k/Sm3TXHbAS1qVzD/\n-----END PRIVATE KEY-----",
+    "templates": [
+        "default"
+    ],
+    "timeout_heartbeat": 10,
+    "timeout_start_host": 30,
+    "timeout_start_rnode": 30
+}
