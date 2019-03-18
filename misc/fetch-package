@@ -1,0 +1,67 @@
+#!/bin/zsh
+# requires zsh, md5sum, curl, atool
+
+if [[ $# -ne 2 ]]; then
+	print "Usage: $0 <url> <download-dir>" >&2
+	exit 1
+fi
+
+url=$1
+dl_dir=$2:a # Turn into absolute path
+
+set -o pipefail
+ret=0
+
+# Turn "http://example.com/foo/bar?baz=a/b/c" into "bar_baz_a_b_c"
+url_filename="$(sed 's|[^?#]*/||; s/[^-\.0-9A-Z_a-z]/_/g' <<<$url)"
+
+url_hash="$(print -n $url | md5sum | cut -c-8)" || ret=$?
+if [[ $ret -ne 0 || -z $url_hash ]]; then
+	print "Failed to compute MD5 hash: $ret" >&2
+	exit $ret
+fi
+
+out_file=$dl_dir/$url_hash-$url_filename
+unpack_dir=$dl_dir/$url_hash
+
+mkdir -p $dl_dir || ret=$?
+if (( ret )); then
+	print "Failed to create directory $dl_dir: $ret" >&2
+	exit $ret
+fi
+
+http_code="$(curl -fLs -w '%{http_code}' -z $out_file -o $out_file $url)" || ret=$?
+if (( ret )); then
+	print "Failed to download file from $url: $ret" >&2
+	exit $ret
+elif (( http_code != 200 && http_code != 304 )); then
+	print "Failed to download file from $url: HTTP status: $http_code" >&2
+	exit 1
+fi
+
+if (( http_code == 200 )); then
+	rm -rf $unpack_dir || ret=$?
+	if (( ret )); then
+		print "Failed to clean directory $unpack_dir: $ret" >&2
+		exit $ret
+	fi
+	mkdir $unpack_dir || ret=$?
+	if (( ret )); then
+		print "Failed to create directory $unpack_dir: $ret" >&2
+		exit $ret
+	fi
+	aunpack -q -X $unpack_dir $out_file || ret=$?
+	if (( ret )); then
+		print "Failed to unpack archive $out_file: $ret" >&2
+		exit $ret
+	fi
+	print $url >$dl_dir/$url_hash-url.txt
+fi
+
+rnode_dir="$(print -l $unpack_dir/*(/) | head -1)" || ret=$?
+if [[ $ret -ne 0 || -z $rnode_dir ]]; then
+	print "Failed to find a directory in $unpack_dir: $ret" >&2
+	exit $ret
+fi
+
+print $rnode_dir

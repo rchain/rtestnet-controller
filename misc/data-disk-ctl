@@ -1,0 +1,40 @@
+#!/bin/zsh
+set -e -o pipefail
+
+usage()
+{
+	echo "Usage: $0 init|clean <disk-file> <mount-dir>" >&2
+	exit 1
+}
+
+if [[ $# -ne 3 ]]; then
+	usage
+fi
+
+action=$1
+disk_file=$2
+mount_dir=$3
+
+while [[ ! -e $disk_file ]]; then
+	sleep 1
+done
+
+case $action in
+	init)
+		if mountpoint -q $mount_dir; then
+			exit 0
+		fi
+		if ! blkid $disk_file >/dev/null; then
+			mkfs.ext4 $disk_file
+		fi
+		mount $disk_file $mount_dir
+		;;
+	clean)
+		if mountpoint -q $mount_dir; then
+			fuser -s 9 -k $mount_dir
+			umount $mount_dir
+		fi
+		wipefs -a $disk_file
+		;;
+	*) usage ;;
+esac

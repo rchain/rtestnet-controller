@@ -1,0 +1,32 @@
+#!/bin/zsh
+set -o pipefail
+ret=0
+
+source_file=/etc/apt/sources.list.d/elastic-6.x.list
+source_url=https://artifacts.elastic.co/packages/6.x/apt 
+
+if [[ ! -e $source_file ]]; then
+	curl -fLs https://artifacts.elastic.co/GPG-KEY-elasticsearch |\
+		apt-key add - || ret=$?
+	if (( ret )); then
+		print "Failed to add Elastic GPG key: $ret" >&2
+		exit $ret
+	fi
+	mkdir -p $source_file:h || ret=$?
+	print "deb $source_url stable main" >$source_file || ret=$?
+	if (( ret )); then
+		print "Failed to write to $source_file: $ret" >&2
+		exit $ret
+	fi
+	apt update || ret=$?
+	if (( ret )); then
+		print "Failed to update APT sources: $ret" >&2
+		exit $ret
+	fi
+fi
+
+apt install filebeat || ret=$?
+if (( ret )); then
+	print "Failed to install Filebeat: $ret" >&2
+	exit $ret
+fi
